@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mt-4">Notes</h1>
+
+    <ul class="list-group list-group-flush mt-3" id="notes">
+        {% for note in user.notes %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ note.data }}
+            <button type="button" class="btn-close" aria-label="Close" onClick="deleteNote"({{note.id}})></button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST" class="mt-4">
+        <textarea name="note" id="note" class="form-control" placeholder="Write your note here..."></textarea>
+        <br />
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Add Note</button>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript for deleting notes -->
+<script>
+    function deleteNote(noteId) {
+        fetch("/delete-note", {
+            method: "POST",
+            body: JSON.stringify({ noteId: noteId }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((_res) => {
+            window.location.href = "/";
+        });
+    }
+</script>
+{% endblock %}
